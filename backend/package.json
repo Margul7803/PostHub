@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev-back": "nodemon --watch src/** --exec \"npx ts-node src/app.ts\"",
-    "start-back": "npx ts-node src/app.ts"
+    "dev-back": "nodemon --watch src --ext ts --exec \"npx ts-node src/init.ts\"",
+    "start-back": "npx ts-node src/init.ts"
   },
   "author": "",
   "license": "ISC",
