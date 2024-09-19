@@ -30,7 +30,6 @@ app.post("/", authenticateToken, async (req: Request, res: Response) => {
         ...data,
         author: req.user?.id,
     });
-    console.log(comment);
 
     try {
         const dataToSave = await comment.save();
