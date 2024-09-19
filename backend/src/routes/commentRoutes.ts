@@ -1,10 +1,12 @@
 import { Request, Response, Router } from "express";
 import CommentModel from "../models/commentModel";
 import express from "express";
+import { authenticateToken } from "../middlewares/authMiddleware";
+import UserModel from "../models/userModel";
 
 const app = express();
 
-app.get("/", async (req: Request, res: Response) => {
+app.get("/", authenticateToken, async (req: Request, res: Response) => {
     try {
         const comments = await CommentModel.find();
         res.json(comments);
@@ -13,7 +15,7 @@ app.get("/", async (req: Request, res: Response) => {
     }
 });
 
-app.get("/:id", async (req: Request, res: Response) => {
+app.get("/:id", authenticateToken, async (req: Request, res: Response) => {
     try {
         const comment = await CommentModel.findById(req.params.id);
         res.json(comment);
@@ -22,8 +24,13 @@ app.get("/:id", async (req: Request, res: Response) => {
     }
 });
 
-app.post("/", async (req: Request, res: Response) => {
-    const comment = new CommentModel(req.body);
+app.post("/", authenticateToken, async (req: Request, res: Response) => {
+    const data = req.body;
+    const comment = new CommentModel({
+        ...data,
+        author: req.user?.id,
+    });
+    console.log(comment);
 
     try {
         const dataToSave = await comment.save();
@@ -33,9 +40,12 @@ app.post("/", async (req: Request, res: Response) => {
     }
 });
 
-app.delete("/:id", async (req: Request, res: Response) => {
+app.delete("/:id", authenticateToken, async (req: Request, res: Response) => {
     try {
-        const comment = await CommentModel.findByIdAndDelete(req.params.id);
+        const comment = await CommentModel.findByIdAndDelete({
+            author: req.user?.id,
+            _id: req.params.id,
+        });
         if (!comment)
             return res.status(404).json({ error: "Comment not found" });
         res.json({ message: "Comment deleted" });

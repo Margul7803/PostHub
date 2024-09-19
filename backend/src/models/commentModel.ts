@@ -13,7 +13,7 @@ export const commentSchema = new Schema({
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     postId: { type: Schema.Types.ObjectId, ref: "Post", required: true },
     content: { type: String, required: true },
-    createdAt: { type: Date, required: true },
+    createdAt: { type: Date, required: true, default: Date.now },
 });
 
 const CommentModel = mongoose.model<Comment & Document>(
