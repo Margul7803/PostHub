@@ -2,11 +2,13 @@ import express, { Express } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import getConfig from "./config/config";
+import authRoutes from "./routes/authRoutes";
+import profileRoutes from "./routes/profileRoutes";
 import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
 import commentRoutes from "./routes/commentRoutes";
 
-const config = getConfig();
+export const config = getConfig();
 
 const mongoString = config.MONGODB_URI;
 
@@ -28,6 +30,8 @@ const port = 3000;
 
 app.use(express.json());
 app.use(cors());
+app.use("/api/auth", authRoutes);
+app.use("/api/profile", profileRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
