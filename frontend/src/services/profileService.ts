@@ -1,8 +1,13 @@
 import { apiClient } from "../config/apiConfig";
+import { User } from "../models/userModel";
 
-export const getProfile = async () => {
+export const getProfile = async (user: User) => {
     try {
-        const response = await apiClient.get("/profile/me");
+        const response = await apiClient.get("/profile/me", {
+            headers: {
+                Authorization: `Bearer ${user.token}`,
+            },
+        });
         return response.data;
     } catch (error) {
         console.error("Erreur lors de la récupération des tâches:", error);

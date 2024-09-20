@@ -5,12 +5,12 @@ import { authenticateToken } from "../middlewares/authMiddleware";
 
 const app = express();
 
-app.get("/", authenticateToken, async (req: Request, res: Response) => {
+app.get("/", async (req: Request, res: Response) => {
     const posts = await PostModel.find();
     res.status(200).json(posts);
 });
 
-app.get("/:id", authenticateToken, async (req: Request, res: Response) => {
+app.get("/:id", async (req: Request, res: Response) => {
     const post = await PostModel.findById(req.params.id);
     res.status(200).json(post);
 });

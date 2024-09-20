@@ -1,40 +1,35 @@
-export const postModule = {
+import { defineStore } from "pinia";
+import { Post } from "../models/postModel";
+
+export const usePostStore = defineStore("post", {
     state: () => ({
-        posts: [], // Liste des posts
+        posts: [] as Post[],
     }),
-    mutations: {
-        SET_POSTS(state: { posts: any }, posts: any) {
-            state.posts = posts;
-        },
-        ADD_POST(state: { posts: any[] }, post: any) {
-            state.posts.push(post);
-        },
-    },
     actions: {
-        fetchPosts({ commit }: { commit: Function }) {
-            // Action pour récupérer les posts (par exemple depuis une API)
-            const dummyPosts = [
-                {
-                    id: 1,
-                    title: "Premier Post",
-                    content: "Ceci est le contenu du premier post",
-                },
-                {
-                    id: 2,
-                    title: "Deuxième Post",
-                    content: "Ceci est le contenu du deuxième post",
-                },
-            ];
-            commit("SET_POSTS", dummyPosts);
+        setPosts(posts: Post[]) {
+            this.posts = posts;
         },
-        createPost({ commit }: { commit: Function }, post: any) {
-            // Action pour créer un nouveau post
-            commit("ADD_POST", post);
+        addPost(post: Post) {
+            this.posts.push(post);
+        },
+        deletePost(postId: string) {
+            this.posts = this.posts.filter((post) => post._id !== postId);
+        },
+        updatePost(updatedPost: Post) {
+            const index = this.posts.findIndex(
+                (post) => post._id === updatedPost._id
+            );
+            if (index !== -1) {
+                this.posts[index] = updatedPost;
+            }
         },
     },
     getters: {
-        getAllPosts: (state: { posts: any }) => state.posts,
-        getPostById: (state: { posts: any[] }) => (id: any) =>
-            state.posts.find((post) => post.id === id),
+        getPostById: (state) => (id: string) => {
+            return state.posts.find((post) => post._id === id);
+        },
+        getPosts: (state) => {
+            return state.posts;
+        },
     },
-};
+});

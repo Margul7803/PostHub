@@ -6,7 +6,7 @@ import UserModel from "../models/userModel";
 
 const app = express();
 
-app.get("/", authenticateToken, async (req: Request, res: Response) => {
+app.get("/", async (req: Request, res: Response) => {
     try {
         const comments = await CommentModel.find();
         res.json(comments);
@@ -15,7 +15,7 @@ app.get("/", authenticateToken, async (req: Request, res: Response) => {
     }
 });
 
-app.get("/:id", authenticateToken, async (req: Request, res: Response) => {
+app.get("/:id", async (req: Request, res: Response) => {
     try {
         const comment = await CommentModel.findById(req.params.id);
         res.json(comment);

@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import PostForm from './components/PostForm.vue';
 </script>
+
 <template>
-  <v-app>
-<tempalte v-if="$route.meta.layout === 'auth'"><router-view /></tempalte>
-<template v-else>
-  <v-card>
+  <div v-if="$route.meta.layout == 'auth'"><router-view /></div>
+  <v-card v-if="$route.meta.layout == 'main'">
     <v-layout>
       <v-navigation-drawer
         permanent
@@ -22,33 +22,34 @@
 
         <v-list class="nav" density="compact" nav>
           <div>
-            <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
-            <v-list-item prepend-icon="mdi-account" title="My Profile" value="account"></v-list-item>
+            <v-list-item prepend-icon="mdi-home-city" title="Home" value="home" @click="$router.push('/')"></v-list-item>
+            <v-list-item prepend-icon="mdi-account" title="My Profile" value="account" @click="$router.push('/profile')"></v-list-item>
           </div>
-          <v-btn color="indigo" height="50" width="100%">Post<v-icon
-          icon="mdi-send"
-          end
-        ></v-icon></v-btn>
+        <PostForm />
         </v-list>
       </v-navigation-drawer>
       <v-main> <router-view /></v-main>
     </v-layout>
   </v-card>
 </template>
-</v-app>
-</template>
 
 <script lang="ts">
 import { getProfile } from './services/profileService';
-import { Profile } from './models/profileModel';
+import { User } from './models/userModel';
 import { ref } from 'vue';
+import { useUserStore } from './store/userModule';
 
-const profile = ref<Profile[]>([])
+const profile = ref<User>()
 
 export default {
   async mounted() {
     try {
-      profile.value = await getProfile();
+
+      const userStore = useUserStore()
+      const userData = userStore.getUser()
+      console.log('userData:', userData);
+      //profile.value = await getProfile(userData);
+      console.log(this.$route.meta.layout)
     } catch (error) {
       console.error('Erreur lors de la récupération des tâches dans le composant:', error);
     }

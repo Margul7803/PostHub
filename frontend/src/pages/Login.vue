@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { postLogin } from '../services/authService';
+import { useUserStore } from '../store/userModule';
+
 </script>
 
 <template>
@@ -52,12 +54,16 @@ export default {
       const isValid = await event
 
       try {
-          isValid.valid && await postLogin(this.userData)
-          this.$store.dispatch.login();
+        if (isValid.valid){
+          const token = await postLogin(this.userData)
+          const userStore = useUserStore()
+          userStore.setToken(token)
+
           this.$router.push("/")
+        }
       }
       catch(e) {
-          console.log('[API] error:',(e))
+        console.log('[API] error:',(e))
       }
 
       this.loading = false

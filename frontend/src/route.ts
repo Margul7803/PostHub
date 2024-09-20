@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useUserStore } from "./store/userModule";
 
 import HomePage from "./pages/Home.vue";
 import ProfilePage from "./pages/Profile.vue";
 import LoginPage from "./pages/Login.vue";
 import RegisterPage from "./pages/Register.vue";
-import { store } from "./store/store";
 
 const routes = [
     {
@@ -40,7 +40,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {
-        if (!store.state.isAuthenticated) {
+        if (!useUserStore().getToken()) {
             next({ name: "login" });
         } else {
             next();
