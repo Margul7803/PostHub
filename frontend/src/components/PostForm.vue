@@ -15,24 +15,18 @@
   </template>
 
   <template v-slot:default="{ isActive }">
-    <v-card title="Dialog">
+    <v-card title="Post">
       <v-form validate-on="submit lazy" @submit.prevent="submitTaskForm">
       <v-text-field
-        v-model="taskData.name"
+        v-model="postData.description"
         :rules="[rules.required]"
-        label="Task name"
+        label="description"
       ></v-text-field>
 
       <v-text-field
-        v-model="taskData.description"
+        v-model="postData.imageUrl"
         :rules="[rules.required]"
-        label="Task description"
-      ></v-text-field>
-
-      <v-text-field
-        v-model="taskData.datetime"
-        label="Task Date"
-        type="date"
+        label="image url"
       ></v-text-field>
 
       <v-btn
@@ -55,6 +49,7 @@
 
 <script>
 import { postPost } from '../services/postService'
+import { useUserStore } from '../store/userModule';
 
   export default {
     data() {
@@ -62,11 +57,9 @@ import { postPost } from '../services/postService'
             loading: false,
             rules: {required: value => !!value || 'Field is required'},
             timeout: null,
-            taskData: {
-                name: '',
-                description: '',
-                datetime: '',
-                creator: 'User'
+            postData: {
+              description: '',
+              imageUrl: '',
             }
         }
     },
@@ -75,16 +68,11 @@ import { postPost } from '../services/postService'
       async submitTaskForm (event) {
         this.loading = true
         const isValid = await event
-
+        const userStore = useUserStore()
+        const userToken = userStore.getToken()
         try {
-            if (this.taskData.datetime) {
-                const [day, month, year] = this.taskData.datetime.split('-');
+            isValid.valid && await postPost(this.postData, userToken)
 
-               
-            }
-
-            isValid.valid && await postPost(this.taskData)
-            this.isActive = false
         }
         catch(e) {
             console.log('[API] error:',(e))
