@@ -3,7 +3,7 @@ import PostForm from './components/PostForm.vue';
 </script>
 
 <template>
-  <div v-if="$route.meta.layout == 'auth'"><router-view /></div>
+  <div v-if="$route.meta.layout == 'auth'"><router-view @login-event="getUserInfo"/></div>
   <v-card v-if="$route.meta.layout == 'main'">
     <v-layout>
       <v-navigation-drawer
@@ -12,9 +12,9 @@ import PostForm from './components/PostForm.vue';
         <template v-slot:prepend>
           <v-list-item
             lines="three"
-            prepend-avatar="https://randomuser.me/api/portraits/women/81.jpg"
+            :prepend-avatar="profile?.avatarUrl"
             subtitle="Logged in"
-            title="Jane Smith"
+            :title="profile?.username"
           ></v-list-item>
         </template>
 
@@ -23,12 +23,12 @@ import PostForm from './components/PostForm.vue';
         <v-list class="nav" density="compact" nav>
           <div>
             <v-list-item prepend-icon="mdi-home-city" title="Home" value="home" @click="$router.push('/')"></v-list-item>
-            <v-list-item prepend-icon="mdi-account" title="My Profile" value="account" @click="$router.push('/profile')"></v-list-item>
+            <v-list-item prepend-icon="mdi-account" title="My Profile" value="account" @click="goToProfile()"></v-list-item>
           </div>
         <PostForm />
         </v-list>
       </v-navigation-drawer>
-      <v-main> <router-view /></v-main>
+      <v-main> <router-view/></v-main>
     </v-layout>
   </v-card>
 </template>
@@ -48,13 +48,31 @@ export default {
       const userStore = useUserStore()
       const userData = userStore.getUser()
       console.log('userData:', userData);
-      //profile.value = await getProfile(userData);
       console.log(this.$route.meta.layout)
     } catch (error) {
       console.error('Erreur lors de la récupération des tâches dans le composant:', error);
     }
-  }
+  },
+  methods: {
+    async getUserInfo() {
+      const userStore = useUserStore()
+      const userData = userStore.getUser();
 
+      const user = await getProfile(userData)
+
+      profile.value = user
+    },
+    goToProfile() {
+    this.$router.push({
+    name: 'profile',
+    params: {
+      username: profile.value?.username,
+      email:  profile.value?.email,
+      avatarUrl:  profile.value?.avatarUrl,
+    },
+  });
+}
+  }
 };
 
 </script>

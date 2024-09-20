@@ -18,6 +18,7 @@ const routes = [
         component: ProfilePage,
         name: "profile",
         meta: { requiresAuth: true, layout: "main" },
+        props: true
     },
     {
         path: "/login",

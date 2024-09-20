@@ -1,11 +1,11 @@
 import { apiClient } from "../config/apiConfig";
 import { User } from "../models/userModel";
 
-export const getProfile = async (user: User) => {
+export const getProfile = async (user: any) => {
     try {
         const response = await apiClient.get("/profile/me", {
             headers: {
-                Authorization: `Bearer ${user.token}`,
+                Authorization: `Bearer ${user.token.token}`,
             },
         });
         return response.data;

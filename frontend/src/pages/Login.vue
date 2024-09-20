@@ -59,6 +59,7 @@ export default {
           const userStore = useUserStore()
           userStore.setToken(token)
 
+          this.$emit('login-event');
           this.$router.push("/")
         }
       }

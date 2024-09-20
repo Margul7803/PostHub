@@ -14,7 +14,7 @@ export const useUserStore = defineStore("user", {
         token: "" as string | undefined,
     }),
     actions: {
-        setUser(user: User) {
+        setUser(user: any) {
             this.id = user._id;
             this.username = user.username;
             this.email = user.email;

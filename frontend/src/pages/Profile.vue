@@ -1,21 +1,33 @@
 <script setup lang="ts">
+import { defineProps } from 'vue';
+
+const props = defineProps<{
+  username: string;
+  email: string;
+  avatarUrl: string;
+}>();
 </script>
 
 <template>
-
+  <v-card max-width="400" class="mx-auto">
+    <v-img
+      :src="props.avatarUrl"
+      alt="User Avatar"
+      height="200"
+      class="mb-4"
+    ></v-img>
+    <v-card-title class="text-h6">{{ props.username }}</v-card-title>
+    <v-card-subtitle class="text-body-2">{{ props.email }}</v-card-subtitle>
+  </v-card>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.v-card {
+  text-align: center;
+  padding: 20px;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.v-img {
+  border-radius: 50%;
 }
 </style>

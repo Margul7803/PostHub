@@ -4,6 +4,9 @@ import { Post } from '../models/postModel';
 defineProps<{
   postProps: Post
 }>()
+
+
+
 </script>
 
 <template>
